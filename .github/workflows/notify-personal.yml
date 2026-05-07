@@ -1,0 +1,60 @@
+name: Notify — Relay Inbound (personal)
+
+# Fires when household Observer commits a new relay file into observer-to-pebble/
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'observer-to-pebble/**'
+      - '!observer-to-pebble/.gitkeep'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Collect new relay files
+        id: relay
+        run: |
+          FILES=$(git diff --name-only HEAD~1 HEAD -- observer-to-pebble/ | grep -v '\.gitkeep' || true)
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          COUNT=$(echo "$FILES" | grep -c . || echo 0)
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+          FIRST=$(echo "$FILES" | head -1 | xargs basename 2>/dev/null || echo "relay file")
+          echo "first=$FIRST" >> $GITHUB_OUTPUT
+
+      - name: Open notification issue
+        if: steps.relay.outputs.count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const files = `${{ steps.relay.outputs.files }}`.trim().split('\n').filter(Boolean);
+            const fileList = files.map(f => `- \`${f}\``).join('\n');
+            const firstName = `${{ steps.relay.outputs.first }}`;
+
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔔 Relay inbound → personal: ${firstName}`,
+              body: [
+                `Household Observer committed ${files.length} relay file(s) to \`observer-to-pebble/\`:`,
+                '',
+                fileList,
+                '',
+                '**Action:** Run the `personal-relay-check` scheduled task in personal Cowork to process and integrate.',
+                '',
+                `_Commit: ${context.sha.slice(0, 7)}_`
+              ].join('\n'),
+              labels: ['relay-inbound']
+            });
+
+            console.log(`Created issue #${issue.data.number}: ${issue.data.html_url}`);

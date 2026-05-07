@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code session data — but not skills (skills ship with the vault)
+.claude/*
+!.claude/skills/
+
+# Obsidian app state
+.obsidian/
+
+# Temporary working files
+staging/
+
+# Credentials — NEVER commit
+.github-token
+.env
+*.env
+
+# Raw source binaries (large attachments)
+raw/assets/
+
+# Local-only skill configs (tokens, machine-specific paths)
+.claude/skills/*/config.local.yaml
+.claude/skills/*/.env

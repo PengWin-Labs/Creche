@@ -1,0 +1,80 @@
+# Skills — Marketplace Configuration
+#
+# This file governs which skills are active for this user and how they
+# are presented. It is practice: shipped with intent, user-editable.
+#
+# A "skill" is a bounded domain capability Pebble can draw on when the
+# conversation calls for it. Skills are not the same as agents (named
+# long-running roles) or features (user-facing capabilities that compose
+# multiple skills). See docs/07-agents-and-skills.md for the full
+# taxonomy.
+#
+# Phase 0 ships a minimal set. The marketplace model — browse, toggle,
+# review — is placeholder until community-contributed skills exist.
+
+version: 0.1.0
+
+# ACTIVE SKILLS
+# Toggle individual skills on or off. Descriptions are shown in the
+# marketplace surface when it becomes available.
+skills:
+
+  spa:
+    enabled: true
+    description: >
+      Deliberate-pause prompts. Surfaces self-care moments when recent
+      journal cadence or language suggests depletion. First-class, not
+      an afterthought.
+
+  tax:
+    enabled: false
+    description: >
+      Basic tax concepts, filing awareness, structural options. Not
+      tax advice; surfaces patterns and options for the user's own
+      research.
+
+  legal:
+    enabled: false
+    description: >
+      Rights surfacing across consumer, workplace, and housing contexts.
+      Plain-language explanation of what protections exist and where to
+      go next.
+
+  health:
+    enabled: false
+    description: >
+      General wellness patterns. Never presented as medical advice — the
+      no_medical_advice guardrail applies here specifically.
+
+  home:
+    enabled: false
+    description: >
+      Home operations, maintenance patterns, vendor records. Household-
+      tier features build on this skill when the household tier is
+      enabled.
+
+  education:
+    enabled: false
+    description: >
+      Learning support, resource discovery, planning across formal and
+      informal learning contexts.
+
+  insurance:
+    enabled: false
+    description: >
+      Coverage literacy, claim navigation. Surfaces options without
+      pushing toward a specific decision.
+
+  investment:
+    enabled: false
+    description: >
+      Structural literacy around investment accounts, retirement
+      structures, and similar. Never recommendations.
+
+# MARKETPLACE
+# Placeholder. When community-contributed skills exist, this block will
+# govern discovery, review thresholds, and update cadence.
+marketplace:
+  enabled: false
+  allow_community_skills: false
+  review_threshold: null
